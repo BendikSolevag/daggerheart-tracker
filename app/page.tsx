@@ -89,8 +89,6 @@ export default async function Home() {
     )
     .eq("id", 1);
 
-  console.log(character);
-  console.log(readsError);
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black p-4">welcome, {JSON.stringify(character, null, 2)}</div>
   );
