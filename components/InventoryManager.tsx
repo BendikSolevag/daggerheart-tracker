@@ -16,7 +16,7 @@ export function InventoryManager({ inv, setInv }: { inv: Inventory; setInv: Disp
                 rounded-md border border-zinc-200
                 px-2 py-1 text-sm
                 focus:outline-none focus:ring-2 focus:ring-violet-500
-                break-words
+                wrap-break-word
               "
               placeholder="Item name"
               value={entry.item}

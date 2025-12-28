@@ -89,9 +89,9 @@ function Badge({ children }: { children: React.ReactNode }) {
 
 function Feature({ label, text }: { label: string; text: string }) {
   return (
-    <p>
+    <div>
       <div className="font-medium text-zinc-800">{label}:</div> <span className="text-zinc-600 whitespace-pre-line">{renderText(text)}</span>
-    </p>
+    </div>
   );
 }
 
@@ -103,9 +103,9 @@ function OriginCard({ title, name, features }: { title: string; name: string; fe
       </div>
       <div className="mt-2 space-y-1 text-sm text-zinc-700">
         {features.map((f) => (
-          <p key={f.name}>
+          <div key={f.name}>
             <div className="font-medium">{f.name}:</div> <span className="text-zinc-600">{renderText(f.description)}</span>
-          </p>
+          </div>
         ))}
       </div>
     </div>

@@ -4,10 +4,12 @@ import { Dispatch, SetStateAction } from "react";
 export function InventoryWeaponsManager({
   invWeapons,
   setInvWeapons,
+  char,
   setChar,
 }: {
   invWeapons: InventoryWeapons;
   setInvWeapons: Dispatch<SetStateAction<InventoryWeapons>>;
+  char: Character;
   setChar: Dispatch<SetStateAction<Character>>;
 }) {
   return (
@@ -15,11 +17,11 @@ export function InventoryWeaponsManager({
       <h2 className="text-sm font-semibold text-zinc-700">Weapons</h2>
 
       <ul className="space-y-2">
-        {invWeapons.map((entry) => {
+        {invWeapons.map((entry, i) => {
           const w = entry.weapon_id;
 
           return (
-            <li key={entry.id} className="flex items-start gap-2 rounded-md border border-zinc-200 p-2">
+            <li key={i} className="flex items-start gap-2 rounded-md border border-zinc-200 p-2">
               <div className="flex-1 space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-zinc-800">{w.name}</span>
@@ -46,8 +48,20 @@ export function InventoryWeaponsManager({
                   type="button"
                   className="text-xs text-violet-600 hover:text-violet-800"
                   onClick={() => {
-                    //onEquip(entry.weapon_id.id);
-                    setInvWeapons((prev) => prev.filter((it) => it.id !== entry.id));
+                    if (entry.weapon_id.weapon_type == "Primary") {
+                      const charweapon = char.weapon_primary_id;
+                      setChar({ ...char, weapon_primary_id: entry.weapon_id });
+                      if (charweapon) {
+                        setInvWeapons((prev) => prev.filter((it) => it.id !== entry.id).concat([{ id: 0, weapon_id: charweapon }]));
+                      }
+                    }
+                    if (entry.weapon_id.weapon_type == "Secondary") {
+                      const charweapon = char.weapon_secondary_id;
+                      setChar({ ...char, weapon_secondary_id: entry.weapon_id });
+                      if (charweapon) {
+                        setInvWeapons((prev) => prev.filter((it) => it.id !== entry.id).concat([{ id: 0, weapon_id: charweapon }]));
+                      }
+                    }
                   }}
                 >
                   Equip

@@ -31,10 +31,10 @@ export function CharacterEditor({
       <AttributesPanel char={char} setChar={setChar} />
       <GoldCounter char={char} setChar={setChar} />
       <HealthHopePanel char={char} setChar={setChar} />
-      <Weapons char={char} />
+      <Weapons char={char} setChar={setChar} setInvWeapons={setInvWeapons} />
       <Armor char={char} />
       <InventoryManager inv={inv} setInv={setInv} />
-      <InventoryWeaponsManager invWeapons={invWeapons} setInvWeapons={setInvWeapons} setChar={setChar} />
+      <InventoryWeaponsManager invWeapons={invWeapons} setInvWeapons={setInvWeapons} char={char} setChar={setChar} />
     </>
   );
 }

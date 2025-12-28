@@ -98,9 +98,9 @@ export const CharacterSchema = z.object({
   ancestry_id: AncestrySchema,
   community_id: CommunitySchema,
 
-  weapon_primary_id: WeaponSchema,
-  weapon_secondary_id: WeaponSchema,
-  armor_id: ArmorSchema,
+  weapon_primary_id: WeaponSchema.nullable(),
+  weapon_secondary_id: WeaponSchema.nullable(),
+  armor_id: ArmorSchema.nullable(),
 });
 
 export type Character = z.infer<typeof CharacterSchema>;
