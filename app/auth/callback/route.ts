@@ -3,29 +3,31 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/supabase/server";
 
 export async function GET(request: Request) {
+  console.log("request.url", request.url);
+
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  console.log("code", code);
   // if "next" is in param, use it as the redirect URL
-  const next = searchParams.get("next") ?? "/character";
-  console.log("next", next);
+  let next = searchParams.get("next") ?? "/";
+  if (!next.startsWith("/")) {
+    // if "next" is not a relative URL, use the default
+    next = "/";
+  }
 
   if (code) {
     const supabase = await createClient();
-    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-    console.log("data", data);
-
-    const r = await supabase
-      .from("profiles")
-      .update({
-        name: data.user?.user_metadata.full_name,
-        email: data.user?.email,
-      })
-      .eq("id", data?.user?.id)
-      .select();
-
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL as string}${next}`);
+      const forwardedHost = request.headers.get("x-forwarded-host"); // original origin before load balancer
+      const isLocalEnv = process.env.NODE_ENV === "development";
+      if (isLocalEnv) {
+        // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
+        return NextResponse.redirect(`${origin}${next}`);
+      } else if (forwardedHost) {
+        return NextResponse.redirect(`https://${forwardedHost}${next}`);
+      } else {
+        return NextResponse.redirect(`${origin}${next}`);
+      }
     }
   }
 
