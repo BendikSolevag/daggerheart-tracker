@@ -1,15 +1,7 @@
 import { Character, InventoryWeapons } from "@/app/types";
 import { Dispatch, SetStateAction } from "react";
 
-export function Weapons({
-  char,
-  setInvWeapons,
-  setChar,
-}: {
-  char: Character;
-  setInvWeapons: Dispatch<SetStateAction<InventoryWeapons>>;
-  setChar: Dispatch<SetStateAction<Character>>;
-}) {
+export function Weapons({ char, setChar }: { char: Character; setChar: Dispatch<SetStateAction<Character>> }) {
   const WeaponCard = ({ title, weapon, slot }: { title: string; weapon: Character["weapon_primary_id"]; slot: "primary" | "secondary" }) => {
     if (!weapon) return null;
 
@@ -21,9 +13,6 @@ export function Weapons({
           aria-label="Remove weapon"
           className="absolute top-2 right-2 text-zinc-400 hover:text-red-500"
           onClick={() => {
-            // add weapon to inventory
-            setInvWeapons((prev) => [...prev, weapon]);
-
             // remove from character
             setChar((prev) => ({
               ...prev,

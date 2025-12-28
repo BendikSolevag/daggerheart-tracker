@@ -1,6 +1,6 @@
 import { createClient } from "@/supabase/server";
 import { redirect } from "next/navigation";
-import { CharacterSchema, InventorySchema, InventoryWeaponsSchema } from "../types";
+import { CharacterSchema, InventoryArmorsSchema, InventorySchema, InventoryWeaponsSchema } from "../types";
 import { CharacterEditor } from "@/components/CharacterEditor";
 
 export default async function Home() {
@@ -164,10 +164,31 @@ export default async function Home() {
 
   const inventoryWeapons = InventoryWeaponsSchema.parse(inventoryWeaponsData);
 
+  const { data: inventoryArmorsData, error: errorArmorsInventory } = await supabase
+    .from("inventoryArmors")
+    .select(
+      `
+      id,
+      armors!inventoryArmors_armor_id_fkey (
+        id,
+        name,
+        tier,
+        base_score,
+        base_threshold_low,
+        base_threshold_high,
+        feature_name,
+        feature_description
+      )
+    `
+    )
+    .eq("owner_id", 1);
+
+  const inventoryArmors = InventoryArmorsSchema.parse(inventoryArmorsData);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black p-4">
       <main className="w-full max-w-3xl space-y-4">
-        <CharacterEditor character={character} inventory={inventory} inventoryWeapons={inventoryWeapons} />
+        <CharacterEditor character={character} inventory={inventory} inventoryWeapons={inventoryWeapons} inventoryArmors={inventoryArmors} />
       </main>
     </div>
   );
