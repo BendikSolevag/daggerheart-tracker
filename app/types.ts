@@ -67,7 +67,19 @@ export const ArmorSchema = z.object({
   feature_description: z.string().nullable(),
 });
 
-// Character
+/* ---------- Join tables ---------- */
+
+export const CharacterWeaponSchema = z.object({
+  id: z.number(),
+  weapon_id: WeaponSchema,
+});
+
+export const CharacterArmorSchema = z.object({
+  id: z.number(),
+  armors: ArmorSchema,
+});
+
+/* ---------- Character ---------- */
 
 export const CharacterSchema = z.object({
   id: z.number(),
@@ -82,6 +94,8 @@ export const CharacterSchema = z.object({
   presence: z.number(),
   knowledge: z.number(),
 
+  evasion: z.number(),
+
   gold: z.number(),
   stress: z.number(),
   maxStress: z.number(),
@@ -91,16 +105,15 @@ export const CharacterSchema = z.object({
   maxHope: z.number(),
   armor: z.number(),
   maxArmor: z.number(),
-  evasion: z.number(),
 
   class_id: ClassSchema,
   subclass_id: SubclassSchema,
   ancestry_id: AncestrySchema,
   community_id: CommunitySchema,
 
-  weapon_primary_id: WeaponSchema.nullable(),
-  weapon_secondary_id: WeaponSchema.nullable(),
-  armor_id: ArmorSchema.nullable(),
+  weapon_primary_id: CharacterWeaponSchema.nullable(),
+  weapon_secondary_id: CharacterWeaponSchema.nullable(),
+  equipped_armor_id: CharacterArmorSchema.nullable(),
 });
 
 export type Character = z.infer<typeof CharacterSchema>;

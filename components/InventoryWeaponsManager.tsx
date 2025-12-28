@@ -14,6 +14,7 @@ export function InventoryWeaponsManager({
 }) {
   return (
     <section className="bg-white p-4 rounded-lg shadow-sm space-y-3">
+      {JSON.stringify(invWeapons)}
       <h2 className="text-sm font-semibold text-zinc-700">Weapons</h2>
 
       <ul className="space-y-2">
@@ -50,18 +51,18 @@ export function InventoryWeaponsManager({
                   onClick={() => {
                     if (entry.weapon_id.weapon_type == "Primary") {
                       const charweapon = char.weapon_primary_id;
-                      setChar({ ...char, weapon_primary_id: entry.weapon_id });
+                      setChar({ ...char, weapon_primary_id: entry });
                       setInvWeapons((prev) => prev.filter((it) => it.id !== entry.id));
                       if (charweapon) {
-                        setInvWeapons((prev) => prev.concat([{ id: 0, weapon_id: charweapon }]));
+                        setInvWeapons((prev) => prev.concat([charweapon]));
                       }
                     }
                     if (entry.weapon_id.weapon_type == "Secondary") {
                       const charweapon = char.weapon_secondary_id;
-                      setChar({ ...char, weapon_secondary_id: entry.weapon_id });
+                      setChar({ ...char, weapon_secondary_id: entry });
                       setInvWeapons((prev) => prev.filter((it) => it.id !== entry.id));
                       if (charweapon) {
-                        setInvWeapons((prev) => prev.concat([{ id: 0, weapon_id: charweapon }]));
+                        setInvWeapons((prev) => prev.concat([charweapon]));
                       }
                     }
                   }}

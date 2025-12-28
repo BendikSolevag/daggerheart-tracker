@@ -1,7 +1,11 @@
 import { Character } from "@/app/types";
 
 export function Armor({ char }: { char: Character }) {
-  const armor = char.armor_id;
+  const armor = char.equipped_armor_id?.armors;
+
+  if (!armor) {
+    return <></>;
+  }
 
   return (
     <section className="bg-white p-4 rounded-lg shadow-sm space-y-2">

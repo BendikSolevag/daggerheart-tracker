@@ -80,43 +80,53 @@ export default async function Home() {
       ),
       weapon_primary_id (
         id,
-        name,
-        tier,
-        range,
-        trait,
-        burden,
-        damage,
-        weapon_type,
-        feature_name,
-        feature_description
+        weapon_id (
+          id,
+          name,
+          tier,
+          range,
+          trait,
+          burden,
+          damage,
+          weapon_type,
+          feature_name,
+          feature_description
+        )
       ),
       weapon_secondary_id (
         id,
-        name,
-        tier,
-        range,
-        trait,
-        burden,
-        damage,
-        weapon_type,
-        feature_name,
-        feature_description
+        weapon_id (
+          id,
+          name,
+          tier,
+          range,
+          trait,
+          burden,
+          damage,
+          weapon_type,
+          feature_name,
+          feature_description
+        )
       ),
-      armor_id (
+      equipped_armor_id (
         id,
-        name,
-        tier,
-        base_score,
-        base_threshold_low,
-        base_threshold_high,
-        feature_name,
-        feature_description
+        armors!inventoryArmors_armor_id_fkey (
+          id,
+          name,
+          tier,
+          base_score,
+          base_threshold_low,
+          base_threshold_high,
+          feature_name,
+          feature_description
+        )
       )
     `
     )
     .eq("id", 1)
     .single();
 
+  console.log(data, error);
   const character = CharacterSchema.parse(data);
 
   const { data: inventoryData, error: errorInventory } = await supabase

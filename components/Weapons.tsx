@@ -22,7 +22,7 @@ export function Weapons({
           className="absolute top-2 right-2 text-zinc-400 hover:text-red-500"
           onClick={() => {
             // add weapon to inventory
-            setInvWeapons((prev) => [...prev, { id: 0, weapon_id: weapon }]);
+            setInvWeapons((prev) => [...prev, weapon]);
 
             // remove from character
             setChar((prev) => ({
@@ -36,45 +36,45 @@ export function Weapons({
 
         <div className="flex justify-between items-center">
           <h3 className="text-sm font-semibold">{title}</h3>
-          <span className="text-xs text-zinc-500">Tier {weapon.tier}</span>
+          <span className="text-xs text-zinc-500">Tier {weapon.weapon_id.tier}</span>
         </div>
 
         <div className="grid grid-cols-2 gap-2">
           <div>
             <label className="text-xs text-zinc-500">Name</label>
-            <input className="px-2 py-1 rounded-md border w-full" disabled value={weapon.name} />
+            <input className="px-2 py-1 rounded-md border w-full" disabled value={weapon.weapon_id.name} />
           </div>
 
           <div>
             <label className="text-xs text-zinc-500">Damage</label>
-            <input className="px-2 py-1 rounded-md border w-full" disabled value={`${char.proficiency}${weapon.damage}`} />
+            <input className="px-2 py-1 rounded-md border w-full" disabled value={`${char.proficiency}${weapon.weapon_id.damage}`} />
           </div>
 
           <div>
             <label className="text-xs text-zinc-500">Trait</label>
-            <input className="px-2 py-1 rounded-md border w-full" disabled value={weapon.trait} />
+            <input className="px-2 py-1 rounded-md border w-full" disabled value={weapon.weapon_id.trait} />
           </div>
 
           <div>
             <label className="text-xs text-zinc-500">Range</label>
-            <input className="px-2 py-1 rounded-md border w-full" disabled value={weapon.range} />
+            <input className="px-2 py-1 rounded-md border w-full" disabled value={weapon.weapon_id.range} />
           </div>
 
           <div>
             <label className="text-xs text-zinc-500">Burden</label>
-            <input className="px-2 py-1 rounded-md border w-full" disabled value={weapon.burden} />
+            <input className="px-2 py-1 rounded-md border w-full" disabled value={weapon.weapon_id.burden} />
           </div>
 
           <div>
             <label className="text-xs text-zinc-500">Type</label>
-            <input className="px-2 py-1 rounded-md border w-full" disabled value={weapon.weapon_type} />
+            <input className="px-2 py-1 rounded-md border w-full" disabled value={weapon.weapon_id.weapon_type} />
           </div>
         </div>
 
-        {weapon.feature_name && (
+        {weapon.weapon_id.feature_name && (
           <div className="pt-2">
-            <label className="text-xs text-zinc-500">{weapon.feature_name}</label>
-            <p className="text-sm text-zinc-700 whitespace-pre-line">{weapon.feature_description}</p>
+            <label className="text-xs text-zinc-500">{weapon.weapon_id.feature_name}</label>
+            <p className="text-sm text-zinc-700 whitespace-pre-line">{weapon.weapon_id.feature_description}</p>
           </div>
         )}
       </section>
