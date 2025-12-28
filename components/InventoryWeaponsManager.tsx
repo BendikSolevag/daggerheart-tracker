@@ -3,12 +3,10 @@ import { Dispatch, SetStateAction } from "react";
 
 export function InventoryWeaponsManager({
   invWeapons,
-  setInvWeapons,
   char,
   setChar,
 }: {
   invWeapons: InventoryWeapons;
-  setInvWeapons: Dispatch<SetStateAction<InventoryWeapons>>;
   char: Character;
   setChar: Dispatch<SetStateAction<Character>>;
 }) {
@@ -59,15 +57,6 @@ export function InventoryWeaponsManager({
                     }}
                   >
                     Equip
-                  </button>
-
-                  <button
-                    type="button"
-                    aria-label="Discard weapon"
-                    className="text-xs text-red-600 hover:text-red-800"
-                    onClick={() => setInvWeapons((prev) => prev.filter((it) => it.id !== entry.id))}
-                  >
-                    Discard
                   </button>
                 </div>
               </li>

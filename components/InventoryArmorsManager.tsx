@@ -3,12 +3,10 @@ import { Dispatch, SetStateAction } from "react";
 
 export function InventoryArmorsManager({
   invArmors,
-  setInvArmors,
   char,
   setChar,
 }: {
   invArmors: InventoryArmors;
-  setInvArmors: Dispatch<SetStateAction<InventoryArmors>>;
   char: Character;
   setChar: Dispatch<SetStateAction<Character>>;
 }) {
@@ -53,15 +51,6 @@ export function InventoryArmorsManager({
                     }}
                   >
                     Equip
-                  </button>
-
-                  <button
-                    type="button"
-                    aria-label="Discard armor"
-                    className="text-xs text-red-600 hover:text-red-800"
-                    onClick={() => setInvArmors((prev) => prev.filter((it) => it.id !== entry.id))}
-                  >
-                    Discard
                   </button>
                 </div>
               </li>

@@ -26,8 +26,7 @@ export function CharacterEditor({
 }) {
   const [char, setChar] = useState<Character>(character);
   const [inv, setInv] = useState<Inventory>(inventory);
-  const [invWeapons, setInvWeapons] = useState<InventoryWeapons>(inventoryWeapons);
-  const [invArmors, setInvArmors] = useState<InventoryArmors>(inventoryArmors);
+
   return (
     <>
       <Header char={char} setChar={setChar} />
@@ -38,8 +37,8 @@ export function CharacterEditor({
       <Weapons char={char} setChar={setChar} />
       <Armor char={char} />
       <InventoryManager inv={inv} setInv={setInv} />
-      <InventoryWeaponsManager invWeapons={invWeapons} setInvWeapons={setInvWeapons} char={char} setChar={setChar} />
-      <InventoryArmorsManager invArmors={invArmors} setInvArmors={setInvArmors} char={char} setChar={setChar} />
+      <InventoryWeaponsManager invWeapons={inventoryWeapons} char={char} setChar={setChar} />
+      <InventoryArmorsManager invArmors={inventoryArmors} char={char} setChar={setChar} />
     </>
   );
 }
