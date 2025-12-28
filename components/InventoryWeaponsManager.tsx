@@ -51,15 +51,17 @@ export function InventoryWeaponsManager({
                     if (entry.weapon_id.weapon_type == "Primary") {
                       const charweapon = char.weapon_primary_id;
                       setChar({ ...char, weapon_primary_id: entry.weapon_id });
+                      setInvWeapons((prev) => prev.filter((it) => it.id !== entry.id));
                       if (charweapon) {
-                        setInvWeapons((prev) => prev.filter((it) => it.id !== entry.id).concat([{ id: 0, weapon_id: charweapon }]));
+                        setInvWeapons((prev) => prev.concat([{ id: 0, weapon_id: charweapon }]));
                       }
                     }
                     if (entry.weapon_id.weapon_type == "Secondary") {
                       const charweapon = char.weapon_secondary_id;
                       setChar({ ...char, weapon_secondary_id: entry.weapon_id });
+                      setInvWeapons((prev) => prev.filter((it) => it.id !== entry.id));
                       if (charweapon) {
-                        setInvWeapons((prev) => prev.filter((it) => it.id !== entry.id).concat([{ id: 0, weapon_id: charweapon }]));
+                        setInvWeapons((prev) => prev.concat([{ id: 0, weapon_id: charweapon }]));
                       }
                     }
                   }}
