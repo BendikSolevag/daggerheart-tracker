@@ -10,7 +10,7 @@ const lexend = Lexend({
 export default async function Home() {
   return (
     <main className={`min-h-screen flex ${lexend.className} font-bold`}>
-      <aside className="bg-lightblue w-[0px] md:w-1/2 flex justify-center items-center">
+      <aside className="bg-lightblue w-0 md:w-1/2 flex justify-center items-center">
         <div>
           <div className={`text-[40px] text-center`}>
             Welcome back,

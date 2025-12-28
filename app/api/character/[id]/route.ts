@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/supabase/server";
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient();
-  const characterId = Number(params.id);
+
+  const p = await params;
+  const characterId = Number(p.id);
 
   // 1. Auth check
+
   const {
     data: { user },
     error: authError,
@@ -23,13 +26,13 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 
   // 3. Ownership check
-  const { data: existing, error: fetchError } = await supabase.from("characters").select("id, user_id").eq("id", characterId).single();
+  const { data: existing, error: fetchError } = await supabase.from("characters").select("id, owner_id").eq("id", characterId).single();
 
   if (fetchError || !existing) {
     return NextResponse.json({ error: "Character not found" }, { status: 404 });
   }
 
-  if (existing.user_id !== user.id) {
+  if (existing.owner_id !== user.id) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -57,11 +60,12 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       maxArmor: character.maxArmor,
       weapon_primary_id: character.weapon_primary_id?.id ?? null,
       weapon_secondary_id: character.weapon_secondary_id?.id ?? null,
-      armor_id: character.armor_id?.id ?? null,
+      equipped_armor_id: character.equipped_armor_id?.id ?? null,
     })
     .eq("id", characterId);
 
   if (updateError) {
+    console.log(updateError);
     return NextResponse.json({ error: updateError.message }, { status: 500 });
   }
 

@@ -40,7 +40,7 @@ export function CharacterEditor({
 
     const timeout = setTimeout(async () => {
       try {
-        await fetch(`/api/characters/${char.id}`, {
+        await fetch(`/api/character/${char.id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
