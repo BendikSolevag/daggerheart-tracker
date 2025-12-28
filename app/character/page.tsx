@@ -1,6 +1,6 @@
 import { createClient } from "@/supabase/server";
 import { redirect } from "next/navigation";
-import { Character, CharacterSchema } from "../types";
+import { CharacterSchema, InventorySchema } from "../types";
 import { CharacterEditor } from "@/components/CharacterEditor";
 
 export default async function Home() {
@@ -9,7 +9,13 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    redirect("/auth");
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black p-4">
+        <main className="w-full max-w-3xl space-y-4">
+          <div>no user bitch</div>
+        </main>
+      </div>
+    );
   }
 
   const { data, error } = await supabase
@@ -116,10 +122,22 @@ export default async function Home() {
 
   const character = CharacterSchema.parse(data);
 
+  const { data: inventoryData, error: errorInventory } = await supabase
+    .from("inventory")
+    .select(
+      `
+        id,
+        item,
+      `
+    )
+    .eq("character_id", 1);
+
+  const inventory = InventorySchema.parse(inventoryData);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black p-4">
       <main className="w-full max-w-3xl space-y-4">
-        <CharacterEditor character={character} />
+        <CharacterEditor character={character} inventory={inventory} />
       </main>
     </div>
   );

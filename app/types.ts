@@ -104,3 +104,12 @@ export const CharacterSchema = z.object({
 });
 
 export type Character = z.infer<typeof CharacterSchema>;
+
+export const InventorySchema = z.array(
+  z.object({
+    id: z.number(),
+    item: z.string(),
+  })
+);
+
+export type Inventory = z.infer<typeof InventorySchema>;
