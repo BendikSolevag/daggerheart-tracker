@@ -113,3 +113,12 @@ export const InventorySchema = z.array(
 );
 
 export type Inventory = z.infer<typeof InventorySchema>;
+
+export const InventoryWeaponsSchema = z.array(
+  z.object({
+    id: z.number(),
+    weapon_id: WeaponSchema,
+  })
+);
+
+export type InventoryWeapons = z.infer<typeof InventoryWeaponsSchema>;

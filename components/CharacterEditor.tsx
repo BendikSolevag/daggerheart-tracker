@@ -1,6 +1,6 @@
 "use client";
 
-import { Character, Inventory } from "@/app/types";
+import { Character, Inventory, InventoryWeapons } from "@/app/types";
 import { useState } from "react";
 import { Header } from "./Header";
 import { HealthHopePanel } from "./HealthHopePanel";
@@ -10,11 +10,20 @@ import { Armor } from "./Armor";
 import { GoldCounter } from "./Gold";
 import { IdentityPanel } from "./Identity";
 import { InventoryManager } from "./InventoryManager";
+import { InventoryWeaponsManager } from "./InventoryWeaponsManager";
 
-export function CharacterEditor({ character, inventory }: { character: Character; inventory: Inventory }) {
+export function CharacterEditor({
+  character,
+  inventory,
+  inventoryWeapons,
+}: {
+  character: Character;
+  inventory: Inventory;
+  inventoryWeapons: InventoryWeapons;
+}) {
   const [char, setChar] = useState<Character>(character);
   const [inv, setInv] = useState<Inventory>(inventory);
-
+  const [invWeapons, setInvWeapons] = useState<InventoryWeapons>(inventoryWeapons);
   return (
     <>
       <Header char={char} setChar={setChar} />
@@ -25,6 +34,7 @@ export function CharacterEditor({ character, inventory }: { character: Character
       <Weapons char={char} />
       <Armor char={char} />
       <InventoryManager inv={inv} setInv={setInv} />
+      <InventoryWeaponsManager invWeapons={invWeapons} setInvWeapons={setInvWeapons} setChar={setChar} />
     </>
   );
 }
