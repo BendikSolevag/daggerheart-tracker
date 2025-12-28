@@ -117,9 +117,6 @@ export default async function Home() {
     .eq("id", 1)
     .single();
 
-  console.log(data);
-  console.log(error);
-
   const character = CharacterSchema.parse(data);
 
   const { data: inventoryData, error: errorInventory } = await supabase
@@ -127,7 +124,7 @@ export default async function Home() {
     .select(
       `
         id,
-        item,
+        item
       `
     )
     .eq("character_id", 1);
