@@ -1,7 +1,7 @@
 "use client";
 
 import { Character, Inventory, InventoryArmors, InventoryWeapons } from "@/app/types";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Header } from "./Header";
 import { HealthHopePanel } from "./HealthHopePanel";
 import { AttributesPanel } from "./AttributesPanel";
@@ -26,6 +26,42 @@ export function CharacterEditor({
 }) {
   const [char, setChar] = useState<Character>(character);
   const [inv, setInv] = useState<Inventory>(inventory);
+
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    // Avoid firing on initial hydration
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    const controller = new AbortController();
+
+    const timeout = setTimeout(async () => {
+      try {
+        await fetch(`/api/characters/${char.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            character: char,
+          }),
+          signal: controller.signal,
+        });
+      } catch (err) {
+        if ((err as any).name !== "AbortError") {
+          console.error("Failed to save character", err);
+        }
+      }
+    }, 500); // debounce window
+
+    return () => {
+      controller.abort();
+      clearTimeout(timeout);
+    };
+  }, [char]);
 
   return (
     <>

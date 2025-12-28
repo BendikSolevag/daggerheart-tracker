@@ -1,9 +1,12 @@
 import { createClient } from "@/supabase/server";
 import { redirect } from "next/navigation";
-import { CharacterSchema, InventoryArmorsSchema, InventorySchema, InventoryWeaponsSchema } from "../types";
+import { CharacterSchema, InventoryArmorsSchema, InventorySchema, InventoryWeaponsSchema } from "../../types";
 import { CharacterEditor } from "@/components/CharacterEditor";
 
-export default async function Home() {
+export default async function Home({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const characterId = Number(id);
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -123,10 +126,9 @@ export default async function Home() {
       )
     `
     )
-    .eq("id", 1)
+    .eq("id", characterId)
     .single();
 
-  console.log(data, error);
   const character = CharacterSchema.parse(data);
 
   const { data: inventoryData, error: errorInventory } = await supabase
@@ -137,7 +139,7 @@ export default async function Home() {
         item
       `
     )
-    .eq("character_id", 1);
+    .eq("character_id", characterId);
 
   const inventory = InventorySchema.parse(inventoryData);
 
@@ -160,7 +162,7 @@ export default async function Home() {
         )
       `
     )
-    .eq("owner_id", 1);
+    .eq("owner_id", characterId);
 
   const inventoryWeapons = InventoryWeaponsSchema.parse(inventoryWeaponsData);
 
@@ -181,7 +183,7 @@ export default async function Home() {
       )
     `
     )
-    .eq("owner_id", 1);
+    .eq("owner_id", characterId);
 
   const inventoryArmors = InventoryArmorsSchema.parse(inventoryArmorsData);
 
