@@ -1,5 +1,4 @@
 import { createClient } from "@/supabase/server";
-import { redirect } from "next/navigation";
 import { CharacterSchema, InventoryArmorsSchema, InventorySchema, InventoryWeaponsSchema } from "../../types";
 import { CharacterEditor } from "@/components/CharacterEditor";
 

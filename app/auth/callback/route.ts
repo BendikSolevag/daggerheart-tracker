@@ -19,6 +19,5 @@ export async function GET(request: Request) {
   }
 
   // Error case
-  const errorBase = process.env.NEXT_PUBLIC_SITE_URL || request.url;
-  return NextResponse.redirect(new URL("/auth/auth-code-error", errorBase));
+  return NextResponse.redirect(new URL("https://daggerhearttracker.vercel.app/error"));
 }
