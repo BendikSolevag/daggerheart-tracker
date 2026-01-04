@@ -7,7 +7,17 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
+
     const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const r = await supabase
+      .from("classes")
+      .update({
+        name: "Bar",
+      })
+      .eq("id", 1)
+      .select();
+
+    console.log(r);
 
     if (error) {
       const redirectUrl = new URL(`https://daggerhearttracker.vercel.app/${JSON.stringify(error)}`);
