@@ -27,12 +27,13 @@ export function CharacterEditor({
   const [char, setChar] = useState<Character>(character);
   const [inv, setInv] = useState<Inventory>(inventory);
 
-  const isFirstRender = useRef(true);
+  const isFirstRenderChar = useRef(true);
+  const isFirstRenderItems = useRef(true);
 
   useEffect(() => {
     // Avoid firing on initial hydration
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
+    if (isFirstRenderChar.current) {
+      isFirstRenderChar.current = false;
       return;
     }
 
@@ -63,6 +64,40 @@ export function CharacterEditor({
     };
   }, [char]);
 
+  useEffect(() => {
+    // Avoid firing on initial hydration
+    if (isFirstRenderItems.current) {
+      isFirstRenderItems.current = false;
+      return;
+    }
+
+    const controller = new AbortController();
+
+    const timeout = setTimeout(async () => {
+      try {
+        await fetch(`/api/character/${char.id}/inventory`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            inv: inv,
+          }),
+          signal: controller.signal,
+        });
+      } catch (err) {
+        if ((err as any).name !== "AbortError") {
+          console.error("Failed to save inventory", err);
+        }
+      }
+    }, 500); // debounce window
+
+    return () => {
+      controller.abort();
+      clearTimeout(timeout);
+    };
+  }, [inv]);
+
   return (
     <>
       <Header char={char} setChar={setChar} />
@@ -72,7 +107,7 @@ export function CharacterEditor({
       <HealthHopePanel char={char} setChar={setChar} />
       <Weapons char={char} setChar={setChar} />
       <Armor char={char} />
-      <InventoryManager inv={inv} setInv={setInv} />
+      <InventoryManager inv={inv} char={char} setInv={setInv} />
       <InventoryWeaponsManager invWeapons={inventoryWeapons} char={char} setChar={setChar} />
       <InventoryArmorsManager invArmors={inventoryArmors} char={char} setChar={setChar} />
     </>

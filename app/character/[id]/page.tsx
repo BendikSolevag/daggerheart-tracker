@@ -135,10 +135,13 @@ export default async function Home({ params }: { params: Promise<{ id: string }>
     .select(
       `
         id,
-        item
+        character_id,
+        item,
+        active
       `
     )
-    .eq("character_id", characterId);
+    .eq("character_id", characterId)
+    .eq("active", true);
 
   const inventory = InventorySchema.parse(inventoryData);
 

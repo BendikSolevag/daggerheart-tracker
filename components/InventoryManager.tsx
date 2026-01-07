@@ -1,7 +1,7 @@
-import { Inventory } from "@/app/types";
+import { Character, Inventory } from "@/app/types";
 import { Dispatch, SetStateAction } from "react";
 
-export function InventoryManager({ inv, setInv }: { inv: Inventory; setInv: Dispatch<SetStateAction<Inventory>> }) {
+export function InventoryManager({ inv, char, setInv }: { inv: Inventory; char: Character; setInv: Dispatch<SetStateAction<Inventory>> }) {
   return (
     <section className="bg-white p-4 rounded-lg shadow-sm space-y-3">
       <h2 className="text-sm font-semibold text-zinc-700">Inventory</h2>
@@ -49,7 +49,9 @@ export function InventoryManager({ inv, setInv }: { inv: Inventory; setInv: Disp
             ...prev,
             {
               id: Math.max(0, ...prev.map((i) => i.id)) + 1,
+              character_id: char.id,
               item: "",
+              active: true,
             },
           ])
         }

@@ -121,7 +121,9 @@ export type Character = z.infer<typeof CharacterSchema>;
 export const InventorySchema = z.array(
   z.object({
     id: z.number(),
+    character_id: z.number(),
     item: z.string(),
+    active: z.boolean(),
   })
 );
 
