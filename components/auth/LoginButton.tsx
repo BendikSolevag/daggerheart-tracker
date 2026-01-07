@@ -9,7 +9,7 @@ function LoginButton() {
       provider: "google",
       options: {
         scopes: "https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile",
-        redirectTo: `https://daggerhearttracker.vercel.app/auth/callback`,
+        redirectTo: `${process.env.NEXT_PUBLIC_URL}/auth/callback`,
       },
     });
   }
