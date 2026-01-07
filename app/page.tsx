@@ -95,8 +95,8 @@ export default async function Home() {
 
           <ul className="space-y-2">
             {partyChars.map((char) => (
-              <li key={char.id} className="rounded bg-gray-100 p-3">
-                <a href={`/character/${char.id}`}>
+              <li key={char.id} className="rounded bg-gray-100">
+                <a className="p-3" href={`/character/${char.id}`}>
                   <div className="font-semibold">
                     {char.name} (Lv. {char.level})
                   </div>
