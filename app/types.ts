@@ -118,6 +118,21 @@ export const CharacterSchema = z.object({
 
 export type Character = z.infer<typeof CharacterSchema>;
 
+export const CharacterShorthandSchema = z.array(
+  z.object({
+    id: z.number(),
+    name: z.string(),
+    level: z.number(),
+    party_id: z.number(),
+    class_id: ClassSchema,
+    subclass_id: SubclassSchema,
+    ancestry_id: AncestrySchema,
+    community_id: CommunitySchema,
+  })
+);
+
+export type CharacterShorthand = z.infer<typeof CharacterShorthandSchema>;
+
 export const InventorySchema = z.array(
   z.object({
     id: z.number(),
@@ -145,3 +160,12 @@ export const InventoryArmorsSchema = z.array(
   })
 );
 export type InventoryArmors = z.infer<typeof InventoryArmorsSchema>;
+
+export const PartyMemberSchema = z.array(
+  z.object({
+    id: z.number(),
+    party_id: z.number(),
+    user_id: z.string(),
+  })
+);
+export type PartyMember = z.infer<typeof InventoryArmorsSchema>;
