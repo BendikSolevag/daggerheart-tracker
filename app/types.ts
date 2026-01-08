@@ -164,8 +164,11 @@ export type InventoryArmors = z.infer<typeof InventoryArmorsSchema>;
 export const PartyMemberSchema = z.array(
   z.object({
     id: z.number(),
-    party_id: z.number(),
     user_id: z.string(),
+    party_id: z.object({
+      id: z.number(),
+      name: z.string(),
+    }),
   })
 );
-export type PartyMember = z.infer<typeof InventoryArmorsSchema>;
+export type PartyMember = z.infer<typeof PartyMemberSchema>;

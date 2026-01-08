@@ -17,14 +17,17 @@ export default async function Home() {
     .select(
       `
         id,
-        party_id,
+        party_id (
+          name,
+          id
+        ),
         user_id
       `
     )
     .eq("user_id", user.id);
 
   const parties = PartyMemberSchema.parse(partyData);
-  console.log(parties.map((elem) => elem.party_id));
+  const partyNameById = Object.fromEntries(parties.map((p) => [p.party_id.id, p.party_id.name]));
 
   const { data: charactersData, error: charactersError } = await supabase
     .from("characters")
@@ -74,7 +77,7 @@ export default async function Home() {
     )
     .in(
       "party_id",
-      parties.map((elem) => elem.party_id)
+      parties.map((elem) => elem.party_id.id)
     );
 
   const chars = CharacterShorthandSchema.parse(charactersData);
@@ -91,7 +94,7 @@ export default async function Home() {
 
       {Object.entries(charactersByParty).map(([partyId, partyChars]) => (
         <section key={partyId} className="border rounded p-4">
-          <h2 className="text-lg font-bold mb-2">Party {partyId}</h2>
+          <h2 className="text-lg font-bold mb-2">{partyNameById[Number(partyId)] ?? "Unknown Party"}</h2>
 
           <ul className="space-y-2">
             {partyChars.map((char) => (
