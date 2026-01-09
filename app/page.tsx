@@ -89,35 +89,55 @@ export default async function Home() {
     return acc;
   }, {});
   return (
-    <main className="space-y-6">
-      <div>Welcome, {user.email}</div>
+    <main className="mx-auto max-w-md px-4 py-6 space-y-8 sm:max-w-2xl lg:max-w-4xl">
+      {/* Header */}
+      <header className="space-y-1">
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900">Your Characters</h1>
+        <p className="text-sm text-gray-500">Signed in as {user.email}</p>
+      </header>
 
-      {Object.entries(charactersByParty).map(([partyId, partyChars]) => (
-        <section key={partyId} className="border rounded p-4">
-          <h2 className="text-lg font-bold mb-2">{partyNameById[Number(partyId)] ?? "Unknown Party"}</h2>
+      {/* Parties */}
+      <div className="space-y-10">
+        {Object.entries(charactersByParty).map(([partyId, partyChars]) => (
+          <section key={partyId} className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+            {/* Party header */}
+            <div className="rounded-t-2xl bg-gradient-to-r from-indigo-500 to-purple-500 px-5 py-4">
+              <h2 className="text-lg font-semibold text-white">{partyNameById[Number(partyId)] ?? "Unknown Party"}</h2>
+              <p className="text-xs text-indigo-100">
+                {partyChars.length} character{partyChars.length !== 1 && "s"}
+              </p>
+            </div>
 
-          <ul className="space-y-2">
-            {partyChars.map((char) => (
-              <li key={char.id} className="rounded bg-gray-100">
-                <a className="p-3" href={`/character/${char.id}`}>
-                  <div className="font-semibold">
-                    {char.name} (Lv. {char.level})
-                  </div>
+            {/* Character list */}
+            <ul className="divide-y divide-gray-100">
+              {partyChars.map((char) => (
+                <li key={char.id}>
+                  <a href={`/character/${char.id}`} className="group block px-5 py-4 transition active:bg-gray-100 hover:bg-gray-50">
+                    <div className="flex items-center justify-between gap-3">
+                      {/* Left */}
+                      <div className="space-y-0.5">
+                        <div className="text-base font-semibold text-gray-900">{char.name}</div>
 
-                  <div className="text-sm text-gray-700">
-                    Class: {char.class_id.name}
-                    {char.subclass_id && ` — ${char.subclass_id.name}`}
-                  </div>
+                        <div className="text-sm text-gray-600">
+                          Lv. {char.level} · {char.class_id.name}
+                          {char.subclass_id && <span className="text-gray-500"> — {char.subclass_id.name}</span>}
+                        </div>
 
-                  <div className="text-sm text-gray-600">
-                    Ancestry: {char.ancestry_id.name} | Community: {char.community_id.name}
-                  </div>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+                        <div className="text-xs text-gray-500">
+                          {char.ancestry_id.name} · {char.community_id.name}
+                        </div>
+                      </div>
+
+                      {/* Chevron */}
+                      <div className="text-gray-400 transition group-hover:text-gray-600">→</div>
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
     </main>
   );
 }
