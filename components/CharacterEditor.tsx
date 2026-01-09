@@ -101,13 +101,14 @@ export function CharacterEditor({
   return (
     <>
       <Header char={char} setChar={setChar} />
-      <IdentityPanel char={char} />
       <AttributesPanel char={char} setChar={setChar} />
       <GoldCounter char={char} setChar={setChar} />
       <HealthHopePanel char={char} setChar={setChar} />
       <Weapons char={char} setChar={setChar} />
       <Armor char={char} />
       <InventoryManager inv={inv} char={char} setInv={setInv} />
+      <IdentityPanel char={char} />
+
       <InventoryWeaponsManager invWeapons={inventoryWeapons} char={char} setChar={setChar} />
       <InventoryArmorsManager invArmors={inventoryArmors} char={char} setChar={setChar} />
     </>

@@ -13,29 +13,27 @@ export function GoldCounter({ char, setChar }: { char: Character; setChar: Dispa
   };
 
   return (
-    <div className="bg-amber-50 border border-amber-300 rounded-lg px-4 py-3 shadow-sm">
-      <div className="flex items-center justify-between">
-        {/* Wealth display */}
-        <div className="flex items-center gap-4">
-          <WealthItem label="Coins" icon="🪙" value={coins} />
-          <WealthItem label="Bags" icon="🎒" value={bags} />
-          <WealthItem label="Chests" icon="🧰" value={chests} />
-        </div>
+    <div className="relative overflow-hidden rounded-xl border border-amber-300 bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100 p-5 shadow-md">
+      {/* Header */}
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-amber-800">Wealth</h3>
 
-        {/* Controls */}
         <div className="flex gap-1">
-          <button onClick={() => adjustGold(-1)} className="h-8 w-8 rounded-md border border-amber-300 bg-white text-amber-800 font-semibold active:scale-95">
-            −
-          </button>
-          <button onClick={() => adjustGold(1)} className="h-8 w-8 rounded-md border border-amber-300 bg-white text-amber-800 font-semibold active:scale-95">
-            +
-          </button>
+          <GoldButton onClick={() => adjustGold(-1)}>−</GoldButton>
+          <GoldButton onClick={() => adjustGold(1)}>+</GoldButton>
         </div>
       </div>
 
-      {/* Optional total */}
-      <div className="mt-2 text-xs text-amber-700 text-right">
-        Total gold: <span className="font-medium">{gold}</span>
+      {/* Wealth display */}
+      <div className="flex items-center justify-center gap-6">
+        <WealthItem label="Coins" icon="🪙" value={coins} />
+        <WealthItem label="Bags" icon="🎒" value={bags} />
+        <WealthItem label="Chests" icon="🧰" value={chests} />
+      </div>
+
+      {/* Total */}
+      <div className="mt-4 text-center text-xs text-amber-700">
+        Total gold <span className="font-semibold text-amber-900">{gold}</span>
       </div>
     </div>
   );
@@ -43,12 +41,22 @@ export function GoldCounter({ char, setChar }: { char: Character; setChar: Dispa
 
 function WealthItem({ icon, label, value }: { icon: string; label: string; value: number }) {
   return (
-    <div className="flex items-center gap-2">
-      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-400 text-amber-900">{icon}</div>
-      <div className="flex flex-col leading-tight">
-        <span className="text-xs font-medium text-amber-700">{label}</span>
-        <span className="text-lg font-semibold text-amber-900">{value}</span>
-      </div>
+    <div className="flex w-20 flex-col items-center gap-1">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-yellow-400 text-xl shadow-inner">{icon}</div>
+
+      <span className="text-xs font-medium text-amber-700">{label}</span>
+      <span className="text-xl font-bold text-amber-900 tabular-nums">{value}</span>
     </div>
+  );
+}
+
+function GoldButton({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex h-8 w-8 items-center justify-center rounded-md border border-amber-400 bg-white text-lg font-semibold text-amber-800 shadow-sm transition hover:bg-amber-100 active:scale-95"
+    >
+      {children}
+    </button>
   );
 }
