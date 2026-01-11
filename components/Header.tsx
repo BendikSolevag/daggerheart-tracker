@@ -7,15 +7,7 @@ export function Header({ char, setChar }: { char: Character; setChar: Dispatch<S
       <div className="flex items-center gap-3">
         <div className="w-14 h-14 bg-linear-to-br from-violet-600 to-sky-500 rounded-md flex items-center justify-center text-white font-bold">B</div>
         <div>
-          <input
-            aria-label="Character name"
-            className="text-xl font-semibold bg-transparent border-b border-zinc-200 focus:outline-none"
-            defaultValue={char.name}
-            disabled
-          />
-          <div className="text-sm text-zinc-500">
-            <input className="bg-transparent focus:outline-none" defaultValue={"Xey/Xem"} disabled />
-          </div>
+          <input aria-label="Character name" className="text-xl font-semibold " defaultValue={char.name} disabled />
         </div>
       </div>
 
