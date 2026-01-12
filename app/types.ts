@@ -19,7 +19,7 @@ export const ClassSchema = z.object({
 export const SubclassSchema = z.object({
   id: z.number(),
   name: z.string(),
-  spellcast_trait: z.string(),
+  spellcast_trait: z.string().nullable(),
   foundation_features: z.string(),
   specialization_features: z.string(),
   mastery_features: z.string(),

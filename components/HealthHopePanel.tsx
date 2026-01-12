@@ -2,16 +2,17 @@ import { Character } from "@/app/types";
 import { Dispatch, SetStateAction } from "react";
 
 export function HealthHopePanel({ char, setChar }: { char: Character; setChar: Dispatch<SetStateAction<Character>> }) {
+  const threshold_low = char.level + (char.equipped_armor_id?.armors.base_threshold_low ?? 0);
+
+  const threshold_high = char.level + (char.equipped_armor_id?.armors.base_threshold_high ?? 0);
+
   return (
     <div className="bg-white p-4 rounded-xl shadow-sm space-y-5">
       <h2 className="font-semibold text-lg">Condition</h2>
-
+      <ThresholdDisplay low={threshold_low} high={threshold_high} />
       <StatProgress label="Health" value={char.hp} max={char.maxHp} color="bg-red-500" onChange={(v) => setChar({ ...char, hp: v })} />
-
       <StatProgress label="Stress" value={char.stress} max={char.maxStress} color="bg-amber-400" onChange={(v) => setChar({ ...char, stress: v })} />
-
       <StatProgress label="Hope" value={char.hope} max={char.maxHope} color="bg-cyan-400" onChange={(v) => setChar({ ...char, hope: v })} />
-
       <StatProgress label="Armor" value={char.armor} max={char.maxArmor} color="bg-fuchsia-500" onChange={(v) => setChar({ ...char, armor: v })} />
     </div>
   );
@@ -52,6 +53,21 @@ export function StatProgress({ label, value, max, color, onChange }: StatProgres
         <button onClick={() => onChange(Math.min(max, value + 1))} className="w-10 h-10 rounded-full bg-zinc-100 active:scale-95 text-xl font-semibold">
           +
         </button>
+      </div>
+    </div>
+  );
+}
+
+function ThresholdDisplay({ low, high }: { low: number; high: number }) {
+  return (
+    <div className="flex items-center justify-between rounded-lg bg-zinc-100/60 px-4 py-2 text-sm">
+      <span className="text-zinc-500 font-medium">Thresholds</span>
+      <div className="flex items-center gap-6">
+        <span className="text-zinc-500 text-xs">Minor</span>
+        <span className="font-semibold text-zinc-900">{low}</span>
+        <span className="text-zinc-500 text-xs">Major</span>
+        <span className="font-semibold text-zinc-900">{high}</span>
+        <span className="text-zinc-500 text-xs">Severe</span>
       </div>
     </div>
   );
