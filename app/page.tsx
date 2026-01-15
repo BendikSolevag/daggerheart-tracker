@@ -1,5 +1,4 @@
 import { createClient } from "@/supabase/server";
-import { redirect } from "next/navigation";
 import { CharacterShorthandSchema, PartyMemberSchema } from "./types";
 
 export default async function Home() {
@@ -9,7 +8,13 @@ export default async function Home() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return redirect(`${process.env.NEXT_PUBLIC_URL}/auth`);
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black p-4">
+        <main className="w-full max-w-3xl space-y-4">
+          <div>no user bitch</div>
+        </main>
+      </div>
+    );
   }
 
   const { data: partyData, error: partyError } = await supabase
