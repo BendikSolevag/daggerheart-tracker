@@ -13,6 +13,7 @@ import { InventoryManager } from "./InventoryManager";
 import { InventoryWeaponsManager } from "./InventoryWeaponsManager";
 import { InventoryArmorsManager } from "./InventoryArmorsManager";
 import { InventoryAbilitiesManager } from "./InventoryAbilitiesManager";
+import { Notes } from "./Notes";
 
 export function CharacterEditor({
   character,
@@ -115,6 +116,7 @@ export function CharacterEditor({
       <InventoryWeaponsManager invWeapons={inventoryWeapons} char={char} setChar={setChar} />
       <InventoryArmorsManager invArmors={inventoryArmors} char={char} setChar={setChar} />
       <InventoryAbilitiesManager invAbilities={inventoryAbilities} char={char} setChar={setChar} />
+      <Notes char={char} setChar={setChar} />
     </>
   );
 }

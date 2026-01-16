@@ -105,6 +105,7 @@ export const CharacterSchema = z.object({
   maxHope: z.number(),
   armor: z.number(),
   maxArmor: z.number(),
+  notes: z.string(),
 
   class_id: ClassSchema,
   subclass_id: SubclassSchema,

@@ -44,6 +44,7 @@ export default async function Home({ params }: { params: Promise<{ id: string }>
       maxHope,
       armor,
       maxArmor,
+      notes,
       class_id (
         id,
         name,
