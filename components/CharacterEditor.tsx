@@ -1,6 +1,6 @@
 "use client";
 
-import { Character, Inventory, InventoryArmors, InventoryWeapons } from "@/app/types";
+import { Character, Inventory, InventoryAbilities, InventoryArmors, InventoryWeapons } from "@/app/types";
 import { useEffect, useRef, useState } from "react";
 import { Header } from "./Header";
 import { HealthHopePanel } from "./HealthHopePanel";
@@ -12,17 +12,20 @@ import { IdentityPanel } from "./Identity";
 import { InventoryManager } from "./InventoryManager";
 import { InventoryWeaponsManager } from "./InventoryWeaponsManager";
 import { InventoryArmorsManager } from "./InventoryArmorsManager";
+import { InventoryAbilitiesManager } from "./InventoryAbilitiesManager";
 
 export function CharacterEditor({
   character,
   inventory,
   inventoryWeapons,
   inventoryArmors,
+  inventoryAbilities,
 }: {
   character: Character;
   inventory: Inventory;
   inventoryWeapons: InventoryWeapons;
   inventoryArmors: InventoryArmors;
+  inventoryAbilities: InventoryAbilities;
 }) {
   const [char, setChar] = useState<Character>(character);
   const [inv, setInv] = useState<Inventory>(inventory);
@@ -111,6 +114,7 @@ export function CharacterEditor({
 
       <InventoryWeaponsManager invWeapons={inventoryWeapons} char={char} setChar={setChar} />
       <InventoryArmorsManager invArmors={inventoryArmors} char={char} setChar={setChar} />
+      <InventoryAbilitiesManager invAbilities={inventoryAbilities} char={char} setChar={setChar} />
     </>
   );
 }

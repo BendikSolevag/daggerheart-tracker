@@ -1,5 +1,5 @@
 import { createClient } from "@/supabase/server";
-import { CharacterSchema, InventoryArmorsSchema, InventorySchema, InventoryWeaponsSchema } from "../../types";
+import { CharacterSchema, InventoryAbilitiesSchema, InventoryArmorsSchema, InventorySchema, InventoryWeaponsSchema } from "../../types";
 import { CharacterEditor } from "@/components/CharacterEditor";
 
 export default async function Home({ params }: { params: Promise<{ id: string }> }) {
@@ -189,10 +189,37 @@ export default async function Home({ params }: { params: Promise<{ id: string }>
 
   const inventoryArmors = InventoryArmorsSchema.parse(inventoryArmorsData);
 
+  const { data: inventoryAbilitiesData, error: errorsInventoryAbilities } = await supabase
+    .from("inventoryAbilities")
+    .select(
+      `
+      id,
+      ability_id (
+        id,
+        name,
+        domain_id,
+        level,
+        ability_type,
+        recall_cost,
+        description
+      )
+    `
+    )
+    .eq("owner_id", characterId);
+
+  console.log(inventoryAbilitiesData, errorsInventoryAbilities);
+  const inventoryAbilities = InventoryAbilitiesSchema.parse(inventoryAbilitiesData);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black p-4">
       <main className="w-full max-w-3xl space-y-4">
-        <CharacterEditor character={character} inventory={inventory} inventoryWeapons={inventoryWeapons} inventoryArmors={inventoryArmors} />
+        <CharacterEditor
+          character={character}
+          inventory={inventory}
+          inventoryWeapons={inventoryWeapons}
+          inventoryArmors={inventoryArmors}
+          inventoryAbilities={inventoryAbilities}
+        />
       </main>
     </div>
   );

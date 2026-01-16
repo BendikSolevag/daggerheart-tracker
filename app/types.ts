@@ -172,3 +172,20 @@ export const PartyMemberSchema = z.array(
   })
 );
 export type PartyMember = z.infer<typeof PartyMemberSchema>;
+
+export const InventoryAbilitiesSchema = z.array(
+  z.object({
+    id: z.number(),
+    ability_id: z.object({
+      id: z.number(),
+      name: z.string(),
+      domain_id: z.number(),
+      level: z.number(),
+      ability_type: z.string(),
+      recall_cost: z.number(),
+      description: z.string(),
+    }),
+  })
+);
+
+export type InventoryAbilities = z.infer<typeof InventoryAbilitiesSchema>;
