@@ -15,7 +15,7 @@ function LoginButton() {
       options: {
         // set this to false if you do not want the user to be automatically signed up
         shouldCreateUser: true,
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_URL}/auth/confirm`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_URL}`,
       },
     });
     console.log(data, error);
