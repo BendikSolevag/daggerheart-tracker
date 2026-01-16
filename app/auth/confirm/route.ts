@@ -13,12 +13,17 @@ export async function GET(request: Request) {
     return NextResponse.redirect(new URL(`${redirect_url}/error`));
   }
 
+  console.log("token_hash", token_hash);
   const supabase = await createClient();
+
+  console.log("supabase", supabase);
 
   const { error } = await supabase.auth.verifyOtp({
     token_hash: token_hash,
     type: "email",
   });
+
+  console.log("error", error);
 
   if (error) {
     console.error(error);
