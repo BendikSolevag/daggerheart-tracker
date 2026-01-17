@@ -58,6 +58,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       maxStress: character.maxStress,
       armor: character.armor,
       maxArmor: character.maxArmor,
+      notes: character.notes,
       weapon_primary_id: character.weapon_primary_id?.id ?? null,
       weapon_secondary_id: character.weapon_secondary_id?.id ?? null,
       equipped_armor_id: character.equipped_armor_id?.id ?? null,
