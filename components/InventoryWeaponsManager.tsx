@@ -63,14 +63,14 @@ export function InventoryWeaponsManager({
                       type="button"
                       className="text-xs text-violet-600 hover:text-violet-800 hover:cursor-pointer"
                       onClick={async () => {
-                        const { error } = await supabase
-                          .from("inventoryWeapons")
-                          .insert({
-                            weapon_id: w.id,
-                            owner_id: char.id,
-                          })
-                          .select();
-                        console.log("hai hai");
+                        const { error } = await supabase.from("inventoryWeapons").delete().eq("id", entry.id);
+
+                        if (error) {
+                          console.error(error);
+                          return;
+                        }
+
+                        setInventoryWeapons((prev) => prev.filter((elem) => elem.id !== entry.id));
                       }}
                     >
                       Remove
