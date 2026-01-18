@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/supabase/client";
 import { z } from "zod";
+import { SupabaseClient } from "@supabase/supabase-js";
 
 export function InventoryArmorsManager({
   invArmors,
@@ -15,6 +16,7 @@ export function InventoryArmorsManager({
 }) {
   const [open, setOpen] = useState(false);
   const [inventoryArmors, setInventoryArmors] = useState(invArmors);
+  const supabase = createClient();
 
   return (
     <>
@@ -54,10 +56,26 @@ export function InventoryArmorsManager({
 
                   <button
                     type="button"
-                    className="text-xs text-violet-600 hover:text-violet-800"
+                    className="text-xs text-violet-600 hover:text-violet-800 hover:cursor-pointer"
                     onClick={() => setChar({ ...char, equipped_armor_id: entry })}
                   >
                     Equip
+                  </button>
+                  <button
+                    type="button"
+                    className="text-xs text-violet-600 hover:text-violet-800 hover:cursor-pointer"
+                    onClick={async () => {
+                      const { error } = await supabase.from("inventoryArmors").delete().eq("id", entry.id);
+
+                      if (error) {
+                        console.error(error);
+                        return;
+                      }
+
+                      setInventoryArmors((prev) => prev.filter((elem) => elem.id !== entry.id));
+                    }}
+                  >
+                    Remove
                   </button>
                 </li>
               );
@@ -65,7 +83,7 @@ export function InventoryArmorsManager({
         </ul>
       </section>
 
-      {open && <ArmorOverlay char={char} setInvArmors={setInventoryArmors} onClose={() => setOpen(false)} />}
+      {open && <ArmorOverlay char={char} setInvArmors={setInventoryArmors} onClose={() => setOpen(false)} supabase={supabase} />}
     </>
   );
 }
@@ -85,15 +103,16 @@ export function ArmorOverlay({
   char,
   setInvArmors,
   onClose,
+  supabase,
 }: {
   char: Character;
   setInvArmors: Dispatch<SetStateAction<InventoryArmors>>;
   onClose: () => void;
+  supabase: SupabaseClient<any, "public", "public", any, any>;
 }) {
   const [armors, setArmors] = useState<ArmorRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("");
-  const supabase = createClient();
 
   useEffect(() => {
     const fetchArmors = async () => {
