@@ -13,7 +13,13 @@ export function HealthHopePanel({ char, setChar }: { char: Character; setChar: D
       <StatProgress label="Health" value={char.hp} max={char.maxHp} color="bg-red-500" onChange={(v) => setChar({ ...char, hp: v })} />
       <StatProgress label="Stress" value={char.stress} max={char.maxStress} color="bg-amber-400" onChange={(v) => setChar({ ...char, stress: v })} />
       <StatProgress label="Hope" value={char.hope} max={char.maxHope} color="bg-cyan-400" onChange={(v) => setChar({ ...char, hope: v })} />
-      <StatProgress label="Armor" value={char.armor} max={char.maxArmor} color="bg-fuchsia-500" onChange={(v) => setChar({ ...char, armor: v })} />
+      <StatProgress
+        label="Armor"
+        value={char.armor}
+        max={char.equipped_armor_id?.armors.base_score || 0}
+        color="bg-fuchsia-500"
+        onChange={(v) => setChar({ ...char, armor: v })}
+      />
     </div>
   );
 }
