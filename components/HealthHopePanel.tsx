@@ -1,14 +1,97 @@
 import { Character } from "@/app/types";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { Settings } from "lucide-react";
 
 export function HealthHopePanel({ char, setChar }: { char: Character; setChar: Dispatch<SetStateAction<Character>> }) {
   const threshold_low = char.level + (char.equipped_armor_id?.armors.base_threshold_low ?? 0);
 
   const threshold_high = char.level + (char.equipped_armor_id?.armors.base_threshold_high ?? 0);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   return (
     <div className="bg-white p-4 rounded-xl shadow-sm space-y-5">
-      <h2 className="font-semibold text-lg">Condition</h2>
+      <div className="relative flex items-center justify-between">
+        <h2 className="font-semibold text-lg">Condition</h2>
+
+        <button type="button" onClick={() => setSettingsOpen((prev) => !prev)} className="text-zinc-500 hover:text-zinc-800">
+          <Settings size={18} />
+        </button>
+
+        {settingsOpen && (
+          <div className="absolute right-0 top-full mt-2 w-56 rounded-md border bg-white shadow-md z-10">
+            <ul className="py-1 text-sm text-zinc-700">
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setChar((prev) => {
+                      return {
+                        ...prev,
+                        maxHp: prev.maxHp + 1,
+                      };
+                    });
+                    setSettingsOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 hover:bg-zinc-100"
+                >
+                  Increase max health
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setChar((prev) => {
+                      return {
+                        ...prev,
+                        maxHp: prev.maxHp - 1,
+                      };
+                    });
+                    setSettingsOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 hover:bg-zinc-100"
+                >
+                  Decrease max health
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setChar((prev) => {
+                      return {
+                        ...prev,
+                        maxStress: prev.maxStress + 1,
+                      };
+                    });
+                    setSettingsOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 hover:bg-zinc-100"
+                >
+                  Increase max stress
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setChar((prev) => {
+                      return {
+                        ...prev,
+                        maxStress: prev.maxStress - 1,
+                      };
+                    });
+                    setSettingsOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 hover:bg-zinc-100"
+                >
+                  Decrease max stress
+                </button>
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
       <ThresholdDisplay low={threshold_low} high={threshold_high} />
       <StatProgress label="Health" value={char.hp} max={char.maxHp} color="bg-red-500" onChange={(v) => setChar({ ...char, hp: v })} />
       <StatProgress label="Stress" value={char.stress} max={char.maxStress} color="bg-amber-400" onChange={(v) => setChar({ ...char, stress: v })} />
