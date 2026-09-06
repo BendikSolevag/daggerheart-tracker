@@ -1,11 +1,15 @@
 import { Character } from "@/app/types";
+import { DerivedStats } from "@/lib/stats";
+import { StatBreakdown } from "./StatBreakdown";
 
-export function Armor({ char }: { char: Character }) {
+export function Armor({ char, stats }: { char: Character; stats: DerivedStats }) {
   const armor = char.equipped_armor_id?.armors;
 
   if (!armor) {
     return <></>;
   }
+
+  const { armorScore, thresholdMajor, thresholdSevere } = stats.stats;
 
   return (
     <section className="bg-white p-4 rounded-lg shadow-sm space-y-2">
@@ -20,20 +24,9 @@ export function Armor({ char }: { char: Character }) {
           <input className="px-2 py-1 rounded-md border w-full" disabled value={armor.name} />
         </div>
 
-        <div>
-          <label className="text-xs text-zinc-500">Base Score</label>
-          <input className="px-2 py-1 rounded-md border w-full" disabled value={armor.base_score} />
-        </div>
-
-        <div>
-          <label className="text-xs text-zinc-500">Threshold (Low)</label>
-          <input className="px-2 py-1 rounded-md border w-full" disabled value={armor.base_threshold_low} />
-        </div>
-
-        <div>
-          <label className="text-xs text-zinc-500">Threshold (High)</label>
-          <input className="px-2 py-1 rounded-md border w-full" disabled value={armor.base_threshold_high} />
-        </div>
+        <DerivedField label="Armor Score" stat={armorScore} />
+        <DerivedField label="Major Threshold" stat={thresholdMajor} baseLabel="Armor base" />
+        <DerivedField label="Severe Threshold" stat={thresholdSevere} baseLabel="Armor base" />
       </div>
 
       {armor.feature_name && (
@@ -43,5 +36,21 @@ export function Armor({ char }: { char: Character }) {
         </div>
       )}
     </section>
+  );
+}
+
+/** Read-only field showing the effective value, with the raw armor value as a caption when they differ. */
+function DerivedField({ label, stat, baseLabel }: { label: string; stat: DerivedStats["stats"]["armorScore"]; baseLabel?: string }) {
+  const modified = stat.modifiers.length > 0;
+
+  return (
+    <div>
+      <div className="flex items-center gap-1">
+        <label className="text-xs text-zinc-500">{label}</label>
+        <StatBreakdown label={label} stat={stat} baseLabel={baseLabel} />
+      </div>
+      <input className="px-2 py-1 rounded-md border w-full" disabled value={stat.total} />
+      {modified && <div className="mt-0.5 text-[10px] text-zinc-400">base {stat.base}</div>}
+    </div>
   );
 }

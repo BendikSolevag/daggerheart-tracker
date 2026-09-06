@@ -1,11 +1,11 @@
 import { Character } from "@/app/types";
-import { Dispatch, SetStateAction, useState } from "react";
+import { DerivedStats, StatValue } from "@/lib/stats";
+import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { Settings } from "lucide-react";
+import { StatBreakdown } from "./StatBreakdown";
 
-export function HealthHopePanel({ char, setChar }: { char: Character; setChar: Dispatch<SetStateAction<Character>> }) {
-  const threshold_low = char.level + (char.equipped_armor_id?.armors.base_threshold_low ?? 0);
-
-  const threshold_high = char.level + (char.equipped_armor_id?.armors.base_threshold_high ?? 0);
+export function HealthHopePanel({ char, setChar, stats }: { char: Character; setChar: Dispatch<SetStateAction<Character>>; stats: DerivedStats }) {
+  const { thresholdMajor, thresholdSevere, armorScore, maxHp, maxStress } = stats.stats;
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   return (
@@ -92,17 +92,42 @@ export function HealthHopePanel({ char, setChar }: { char: Character; setChar: D
           </div>
         )}
       </div>
-      <ThresholdDisplay low={threshold_low} high={threshold_high} />
-      <StatProgress label="Health" value={char.hp} max={char.maxHp} color="bg-red-500" onChange={(v) => setChar({ ...char, hp: v })} />
-      <StatProgress label="Stress" value={char.stress} max={char.maxStress} color="bg-amber-400" onChange={(v) => setChar({ ...char, stress: v })} />
+
+      <ThresholdDisplay major={thresholdMajor} severe={thresholdSevere} />
+
+      <StatProgress
+        label="Health"
+        value={char.hp}
+        max={maxHp.total}
+        color="bg-red-500"
+        onChange={(v) => setChar({ ...char, hp: v })}
+        breakdown={<StatBreakdown label="Max Health" stat={maxHp} />}
+      />
+      <StatProgress
+        label="Stress"
+        value={char.stress}
+        max={maxStress.total}
+        color="bg-amber-400"
+        onChange={(v) => setChar({ ...char, stress: v })}
+        breakdown={<StatBreakdown label="Max Stress" stat={maxStress} />}
+      />
       <StatProgress label="Hope" value={char.hope} max={char.maxHope} color="bg-cyan-400" onChange={(v) => setChar({ ...char, hope: v })} />
       <StatProgress
         label="Armor"
         value={char.armor}
-        max={char.equipped_armor_id?.armors.base_score || 0}
+        max={armorScore.total}
         color="bg-fuchsia-500"
         onChange={(v) => setChar({ ...char, armor: v })}
+        breakdown={<StatBreakdown label="Armor Score" stat={armorScore} />}
       />
+
+      {stats.notes.length > 0 && (
+        <ul className="space-y-1 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+          {stats.notes.map((note, i) => (
+            <li key={i}>{note}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
@@ -113,15 +138,19 @@ type StatProgressProps = {
   max: number;
   color: string;
   onChange: (v: number) => void;
+  breakdown?: ReactNode;
 };
 
-export function StatProgress({ label, value, max, color, onChange }: StatProgressProps) {
-  const percent = Math.round((value / max) * 100);
+export function StatProgress({ label, value, max, color, onChange, breakdown }: StatProgressProps) {
+  const percent = max > 0 ? Math.min(100, Math.round((value / max) * 100)) : 0;
 
   return (
     <div className="space-y-1">
       <div className="flex justify-between text-xs text-zinc-500">
-        <span>{label}</span>
+        <span className="flex items-center gap-1">
+          {label}
+          {breakdown}
+        </span>
         <span>
           {value}/{max}
         </span>
@@ -147,15 +176,21 @@ export function StatProgress({ label, value, max, color, onChange }: StatProgres
   );
 }
 
-function ThresholdDisplay({ low, high }: { low: number; high: number }) {
+function ThresholdDisplay({ major, severe }: { major: StatValue; severe: StatValue }) {
   return (
     <div className="flex items-center justify-between rounded-lg bg-zinc-100/60 px-4 py-2 text-sm">
       <span className="text-zinc-500 font-medium">Thresholds</span>
       <div className="flex items-center gap-6">
         <span className="text-zinc-500 text-xs">Minor</span>
-        <span className="font-semibold text-zinc-900">{low}</span>
+        <span className="flex items-center gap-1 font-semibold text-zinc-900">
+          {major.total}
+          <StatBreakdown label="Major Threshold" stat={major} baseLabel="Armor base" />
+        </span>
         <span className="text-zinc-500 text-xs">Major</span>
-        <span className="font-semibold text-zinc-900">{high}</span>
+        <span className="flex items-center gap-1 font-semibold text-zinc-900">
+          {severe.total}
+          <StatBreakdown label="Severe Threshold" stat={severe} baseLabel="Armor base" />
+        </span>
         <span className="text-zinc-500 text-xs">Severe</span>
       </div>
     </div>

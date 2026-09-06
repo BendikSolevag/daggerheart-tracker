@@ -1,7 +1,8 @@
 "use client";
 
 import { Character, Inventory, InventoryAbilities, InventoryArmors, InventoryWeapons } from "@/app/types";
-import { useEffect, useRef, useState } from "react";
+import { computeStats } from "@/lib/stats";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Header } from "./Header";
 import { HealthHopePanel } from "./HealthHopePanel";
 import { AttributesPanel } from "./AttributesPanel";
@@ -30,6 +31,10 @@ export function CharacterEditor({
 }) {
   const [char, setChar] = useState<Character>(character);
   const [inv, setInv] = useState<Inventory>(inventory);
+  // Held here (not in the abilities manager) because domain cards feed into derived stats.
+  const [invAbilities, setInvAbilities] = useState<InventoryAbilities>(inventoryAbilities);
+
+  const stats = useMemo(() => computeStats(char, invAbilities), [char, invAbilities]);
 
   const isFirstRenderChar = useRef(true);
   const isFirstRenderItems = useRef(true);
@@ -105,17 +110,17 @@ export function CharacterEditor({
   return (
     <>
       <Header char={char} setChar={setChar} />
-      <AttributesPanel char={char} setChar={setChar} />
+      <AttributesPanel char={char} setChar={setChar} stats={stats} />
       <GoldCounter char={char} setChar={setChar} />
-      <HealthHopePanel char={char} setChar={setChar} />
-      <Weapons char={char} setChar={setChar} />
-      <Armor char={char} />
+      <HealthHopePanel char={char} setChar={setChar} stats={stats} />
+      <Weapons char={char} setChar={setChar} stats={stats} />
+      <Armor char={char} stats={stats} />
       <InventoryManager inv={inv} char={char} setInv={setInv} />
       <IdentityPanel char={char} />
 
       <InventoryWeaponsManager invWeapons={inventoryWeapons} char={char} setChar={setChar} />
       <InventoryArmorsManager invArmors={inventoryArmors} char={char} setChar={setChar} />
-      <InventoryAbilitiesManager invAbilities={inventoryAbilities} char={char} setChar={setChar} />
+      <InventoryAbilitiesManager invAbilities={invAbilities} setInvAbilities={setInvAbilities} char={char} />
       <Notes char={char} setChar={setChar} />
     </>
   );

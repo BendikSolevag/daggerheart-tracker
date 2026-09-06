@@ -3,33 +3,22 @@ import { Dispatch, SetStateAction, useState, useEffect, useMemo } from "react";
 import { Plus } from "lucide-react";
 import { createClient } from "@/supabase/client";
 import { z } from "zod";
+import { DOMAIN_NAMES } from "@/lib/stats";
 
 export function InventoryAbilitiesManager({
   invAbilities,
+  setInvAbilities,
   char,
-  setChar,
 }: {
   invAbilities: InventoryAbilities;
+  setInvAbilities: Dispatch<SetStateAction<InventoryAbilities>>;
   char: Character;
-  setChar: Dispatch<SetStateAction<Character>>;
 }) {
   const [open, setOpen] = useState(false);
-  const [inventoryAbilities, setInventoryAbilities] = useState(invAbilities);
+  const inventoryAbilities = invAbilities;
 
   function resolve_domain(id: number): string {
-    const DOMAINS_MAP: Record<number, string> = {
-      1: "Arcana",
-      2: "Blade",
-      3: "Bone",
-      4: "Codex",
-      5: "Grace",
-      6: "Midnight",
-      7: "Sage",
-      8: "Splendor",
-      9: "Valor",
-    };
-
-    return DOMAINS_MAP[id] ?? "couldn't resolve";
+    return DOMAIN_NAMES[id] ?? "couldn't resolve";
   }
 
   return (
@@ -75,7 +64,7 @@ export function InventoryAbilitiesManager({
         </ul>
       </section>
 
-      {open && <AbilityOverlay setInvAbilities={setInventoryAbilities} char={char} onClose={() => setOpen(false)} />}
+      {open && <AbilityOverlay setInvAbilities={setInvAbilities} char={char} onClose={() => setOpen(false)} />}
     </>
   );
 }

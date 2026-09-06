@@ -1,35 +1,51 @@
 import { Character } from "@/app/types";
+import { DerivedStats } from "@/lib/stats";
 import { Dispatch, SetStateAction } from "react";
+import { StatBreakdown } from "./StatBreakdown";
 
 const CORE_STATS = [
-  { key: "agility", label: "AGI" },
-  { key: "strength", label: "STR" },
-  { key: "finesse", label: "FIN" },
-  { key: "instinct", label: "INS" },
-  { key: "presence", label: "PRE" },
-  { key: "knowledge", label: "KNO" },
+  { key: "agility", label: "AGI", name: "Agility" },
+  { key: "strength", label: "STR", name: "Strength" },
+  { key: "finesse", label: "FIN", name: "Finesse" },
+  { key: "instinct", label: "INS", name: "Instinct" },
+  { key: "presence", label: "PRE", name: "Presence" },
+  { key: "knowledge", label: "KNO", name: "Knowledge" },
 ] as const;
 
-type StatKey = (typeof CORE_STATS)[number]["key"];
+export function AttributesPanel({ char, setChar, stats }: { char: Character; setChar: Dispatch<SetStateAction<Character>>; stats: DerivedStats }) {
+  const evasion = stats.stats.evasion;
+  const evasionModified = evasion.modifiers.length > 0;
 
-export function AttributesPanel({ char, setChar }: { char: Character; setChar: Dispatch<SetStateAction<Character>> }) {
   return (
     <section className="col-span-2 bg-white p-4 rounded-lg shadow-sm">
       <h2 className="font-semibold mb-3">Attributes</h2>
 
-      {/* Core attributes */}
+      {/* Core attributes: the input is the stored base value; the line below shows the
+          effective value whenever equipment or features modify it. */}
       <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-        {CORE_STATS.map(({ key, label }) => (
-          <div key={key} className="flex flex-col items-center justify-between rounded-md border bg-zinc-50 px-2 py-2">
-            <span className="text-[10px] font-medium tracking-wide text-zinc-500">{label}</span>
-            <input
-              type="number"
-              value={char[key]}
-              onChange={(e) => setChar({ ...char, [key]: Number.parseInt(e.target.value) })}
-              className="w-full text-center text-lg font-semibold bg-transparent focus:outline-none"
-            />
-          </div>
-        ))}
+        {CORE_STATS.map(({ key, label, name }) => {
+          const stat = stats.stats[key];
+          const modified = stat.modifiers.length > 0;
+
+          return (
+            <div key={key} className="flex flex-col items-center justify-between rounded-md border bg-zinc-50 px-2 py-2">
+              <span className="text-[10px] font-medium tracking-wide text-zinc-500">{label}</span>
+              <input
+                type="number"
+                aria-label={`${name} base`}
+                value={char[key]}
+                onChange={(e) => setChar({ ...char, [key]: Number.parseInt(e.target.value) })}
+                className={`w-full text-center text-lg font-semibold bg-transparent focus:outline-none ${modified ? "text-zinc-400 line-through decoration-zinc-300" : ""}`}
+              />
+              {modified && (
+                <div className="flex items-center gap-1 text-sm font-semibold text-zinc-900">
+                  <span>{stat.total}</span>
+                  <StatBreakdown label={name} stat={stat} />
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Evasion – visually distinct */}
@@ -38,12 +54,23 @@ export function AttributesPanel({ char, setChar }: { char: Character; setChar: D
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-500 text-white font-bold">🛡</div>
           <div className="flex flex-col">
             <span className="text-xs font-medium uppercase tracking-wide text-sky-700">Evasion</span>
-            <input
-              type="number"
-              value={char.evasion}
-              onChange={(e) => setChar({ ...char, evasion: Number.parseInt(e.target.value) })}
-              className="w-16 bg-transparent text-lg font-semibold text-sky-900 focus:outline-none"
-            />
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                aria-label="Evasion base"
+                value={char.evasion}
+                onChange={(e) => setChar({ ...char, evasion: Number.parseInt(e.target.value) })}
+                className={`w-16 bg-transparent text-lg font-semibold focus:outline-none ${
+                  evasionModified ? "text-sky-900/40 line-through decoration-sky-300" : "text-sky-900"
+                }`}
+              />
+              {evasionModified && (
+                <div className="flex items-center gap-1">
+                  <span className="text-lg font-semibold text-sky-900">{evasion.total}</span>
+                  <StatBreakdown label="Evasion" stat={evasion} />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

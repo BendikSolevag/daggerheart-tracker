@@ -1,18 +1,17 @@
-drop table if exists public.domains;
-
-create table public.domains (
-  id bigint generated always as identity primary key,
-  slug text not null unique,
-  name text not null,
-  description text not null,
-  created_at timestamptz not null default now()
-);
+-- Generated from the Daggerheart SRD (srd.pdf) by scripts run on 2026-09-05.
+-- Upserts keyed on slug: existing rows are updated in place (ids are preserved),
+-- new rows are inserted. Rows whose slug no longer appears in the SRD are left
+-- untouched and listed at the bottom of this file.
+--
+-- Run order: 01_domains, 02_subclasses, 03_classes, 04_ancestries, 05_communities,
+--            06_abilities, 07_weapons, 08_armors, 09_items, 10_consumables
 
 insert into public.domains (
   slug,
   name,
   description
-) values
+)
+values
 (
   'arcana',
   'Arcana',
@@ -32,6 +31,11 @@ insert into public.domains (
   'codex',
   'Codex',
   'Codex is the domain of intensive magical study. Those who seek magical knowledge turn to the equations of power recorded in books, written on scrolls, etched into walls, or tattooed on bodies. Codex offers a commanding and versatile understanding of magic to devotees who pursue knowledge beyond the boundaries of common wisdom.'
+),
+(
+  'dread',
+  'Dread',
+  'Dread is the domain of nightmares and fear. Those who choose this path can call forth monstrosities, enfeeble their foes, and channel terrifying magic to destroy their enemies. Dread grants its adherents power over forces most are too afraid to employ.'
 ),
 (
   'grace',
@@ -57,4 +61,7 @@ insert into public.domains (
   'valor',
   'Valor',
   'Valor is the domain of protection. Whether through attack or defense, those who choose this discipline channel formidable strength to protect their allies in battle. Valor offers great power to those who raise their shields in defense of others.'
-);
+)
+on conflict (slug) do update set
+  name = excluded.name,
+  description = excluded.description;
